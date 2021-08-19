@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const ArticleContainer = styled.div`
   width: 100%;
@@ -47,9 +48,26 @@ export const ArticleDescription = styled.div`
   margin-top: 4px;
 `;
 
-export const ArticleResponses = styled.div`
+export const ArticleResponsesContainer = styled.div`
   margin-top: 8px;
   text-align: left;
   color: #999;
   font-size: 12px;
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+`;
+
+export const LoadingText = styled.span`
+  color: #666;
+  text-align: left;
+  font-size: 12px;
+`;
+
+export const ArticlesContainer = styled.div`
+  width: 90%;
+  padding: 8px;
+  margin: 0 auto;
+  margin-top: 16px;
 `;

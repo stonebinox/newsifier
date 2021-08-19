@@ -44,4 +44,33 @@ export type ArticleType = {
   thumbnails: any;
   tags: ArticleTagType[];
   primary_tag: ArticleTagType;
+  content?: any[];
+}
+
+export type CommentType = {
+  id: number;
+  replay_to: boolean;
+  content: string;
+  date: string;
+  date_and_time: string;
+  replies_count: number;
+  likes_count: number;
+  username: string;
+  user_id: number;
+  user_likes: number;
+  user_avatar: string;
+  user_url: string;
+  level: number;
+  replies: any[],
+  can_like_it: boolean;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  flagged: number;
+  show_as_dark: boolean;
+  author_role: string;
+  show_author_role: boolean;
+  show_the_badge: boolean;
+  can_edit: boolean;
+  can_delete: boolean;
 }

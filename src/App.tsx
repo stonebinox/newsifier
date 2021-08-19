@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { BrowserRouter } from 'react-router-dom';
 
 import { Header } from './components/header/header';
 import { Articles } from './components/articles/articles';
@@ -9,8 +10,10 @@ const Container  = styled.div`
 `;
 
 export const App = () => (
-  <Container>
-    <Header />
-    <Articles />
-  </Container>
+  <BrowserRouter>
+    <Container>
+      <Header />
+      <Articles />
+    </Container>
+  </BrowserRouter>
 );

@@ -1,31 +1,28 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignLanguage, faComments } from '@fortawesome/free-solid-svg-icons';
 
 import { ArticleType } from '../../services/types';
-import { ArticleContainer, ArticleTitle, ArticleThumbnail, ArticleContent, ArticleDescription, ArticleResponses } from './article.styles';
+import { ArticleResponses } from '../article-responses/article-responses';
+import { ArticleContainer, ArticleTitle, ArticleThumbnail, ArticleContent, ArticleDescription, StyledLink } from './article.styles';
 
 
 interface Props {
   article: ArticleType;
+  loadArticle: () => void;
 };
 
-export const Article = ({ article }: Props) => {
-    console.log(article);
-  const { title, thumbnails: { xsmall_300 }, meta_description, claps_count = 0, comments_count = 0, updated_at } = article;
-
-  const updatedAt = new Date(updated_at);
+export const Article = ({ article, loadArticle }: Props) => {
+  const { title, thumbnails: { xsmall_300 }, meta_description = '', claps_count = 0, comments_count = 0, updated_at, views = 0 } = article;
 
   return (
-    <ArticleContainer>
-      <ArticleThumbnail style={{ background: `url(${xsmall_300}) center`, backgroundSize: 'cover' }} />
-      <ArticleContent>
-        <ArticleTitle>{title}</ArticleTitle>
-        <ArticleDescription>{meta_description}</ArticleDescription>
-        <ArticleResponses>
-          {claps_count} <FontAwesomeIcon icon={faSignLanguage} /> &bull; {comments_count} <FontAwesomeIcon icon={faComments} /> &bull; Last updated: {updatedAt.getDate()}/{updatedAt.getMonth() + 1}/{updatedAt.getFullYear()} at {updatedAt.getHours() < 10 ? `0${updatedAt.getHours()}` : updatedAt.getHours()}{updatedAt.getMinutes() < 10 ? `0${updatedAt.getMinutes()}`: updatedAt.getMinutes()} hours
-        </ArticleResponses>
-      </ArticleContent>
-    </ArticleContainer>
+    <StyledLink to="/article" onClick={loadArticle}>
+      <ArticleContainer>
+        <ArticleThumbnail style={{ background: `url(${xsmall_300}) center`, backgroundSize: 'cover' }} />
+        <ArticleContent>
+          <ArticleTitle>{title}</ArticleTitle>
+          <ArticleDescription>{meta_description}</ArticleDescription>
+          <ArticleResponses views={views} comments={comments_count} claps={claps_count} timestamp={updated_at} />
+        </ArticleContent>
+      </ArticleContainer>
+    </StyledLink>
   );
 };
