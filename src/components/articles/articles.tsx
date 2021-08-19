@@ -15,11 +15,21 @@ const ArticlesTitle = styled.h3`
   font-size: 24px;
 `;
 
+const LoadMore = styled.div`
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  color: #ffa500;
+`;
+
 export const Articles = () => {
   const [articles, setArticles] = useState([] as ArticleType[]);
   const [loading, setLoading] = useState(true);
   const [articleView, setArticleView] = useState(null);
   const [articleViewLoading, setArticleViewLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hideLoadMore, setHideLoadMore] = useState(false);
 
   const goBack = () => {
     setArticleView(null);
@@ -27,11 +37,22 @@ export const Articles = () => {
   }
 
   const loadArticles = () => {
-    getArticles().then(response => response.json()).then(data => {
+    getArticles(page).then(response => response.json()).then(data => {
       setLoading(false);
-      const { data: articles } = data;
-      setArticles(articles);
+      const { data: articlesData } = data;
+      const allArticles = articles.concat(articlesData);
+      setArticles(allArticles);
+
+      if (articlesData.length >= 15) {
+        setPage(page + 1);
+      } else {
+        setHideLoadMore(true);
+      }
     });
+  };
+
+  const loadMore = () => {
+    loadArticles();
   };
 
   const loadArticle = (article: ArticleType) => {
@@ -86,6 +107,7 @@ export const Articles = () => {
               {loading && (<LoadingText>Loading news ...</LoadingText>)}
               {!loading && articles.length === 0 && <LoadingText>Nothing more to read.</LoadingText>}
               {articles.length > 0 && articles.map((article, index) => <Article article={article} loadArticle={() => loadArticle(article)} key={index} />)}
+              {articles.length > 0 && !hideLoadMore && (<LoadMore onClick={loadMore}>Load more</LoadMore>)}
             </>
           )}
         </Route>

@@ -1,7 +1,7 @@
 const baseUrl = 'https://microservice.newsifier.com/api/v1';
 const articleUrl  = 'https://androidworld.newsifier.com/api/v1';
 
-export const getArticles = () => fetch(`${baseUrl}/article/scopes/lat/1/0`, {
+export const getArticles = (page) => fetch(`${baseUrl}/article/scopes/lat/1/${page}`, {
   headers: {
     'X-Tenant': 'androidworld.newsifier.com',
   },
