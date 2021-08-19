@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { getComments } from '../../services/api';
+import { Link } from 'react-router-dom';
 
+import { getComments } from '../../services/api';
 import { ArticleType, CommentType } from '../../services/types';
 import { ArticleResponses } from '../article-responses/article-responses';
 import { ArticleDescription, ArticlesContainer, LoadingText } from '../article/article.styles';
@@ -50,22 +51,26 @@ const ArticleCommentsHolder = styled.div`
 
 interface Props {
   article: ArticleType | null;
+  goBack: () => void;
 }
 
 const parseArticleBody = (content) => {
+  if (!content) {
+    return <></>;
+  }
+
   return content.filter((blocks) => blocks.type === 'paragraph').map((paragraph, index) => (
     <Paragraph key={index} dangerouslySetInnerHTML={{ __html: paragraph.data.text }} />
   ));
 };
 
 const parseComments = (comments: CommentType[]) => {
-  console.log(comments);
   return comments.map((comment, index) => (
-      <Comment comment={comment} key={index} />
-    ));
+    <Comment comment={comment} key={index} />
+  ));
 };
 
-export const ArticlePage = ({ article }: Props) => {
+export const ArticlePage = ({ article, goBack }: Props) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -92,6 +97,7 @@ export const ArticlePage = ({ article }: Props) => {
 
   return (
     <ArticlesContainer>
+      <Link to="/" onClick={goBack}>&lt; Back</Link>
       <ArticleHeading>{title}</ArticleHeading>
       <ArticleImage src={image} alt={title} />
       <ArticleSmallDescription>{meta_description}</ArticleSmallDescription>

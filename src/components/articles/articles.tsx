@@ -21,6 +21,11 @@ export const Articles = () => {
   const [articleView, setArticleView] = useState(null);
   const [articleViewLoading, setArticleViewLoading] = useState(false);
 
+  const goBack = () => {
+    setArticleView(null);
+    setArticleViewLoading(false);
+  }
+
   const loadArticles = () => {
     getArticles().then(response => response.json()).then(data => {
       setLoading(false);
@@ -34,6 +39,7 @@ export const Articles = () => {
     setArticleViewLoading(true);
     
     if (!content) {
+      console.log('loading from api');
       getArticle(id).then(response => response.json()).then(data => {
         const { data: articleData } = data;
         setArticleViewLoading(false);
@@ -41,22 +47,25 @@ export const Articles = () => {
         const articlesCopy = articles.slice();
         const targetArticle = articles.find((article) => article.id === id);
         const articleIndex = articles.findIndex((article) => article.id === id);
-        let article;
+        let finalArticle;
 
         if (targetArticle) {
-          article = {
+          finalArticle = {
             ...targetArticle,
             content: articleData.content,
           };
-          articlesCopy[articleIndex] = article;
+          articlesCopy[articleIndex] = finalArticle;
         } else {
-          article = articleData;
-          articlesCopy.push(article);
+          finalArticle = articleData;
+          articlesCopy.push(finalArticle);
         }
 
         setArticles(articlesCopy);
-        setArticleView(article);
+        setArticleView(finalArticle);
       });
+    } else {
+      console.log('loaded from cache');
+      setArticleView(article as any);
     }
   };
 
@@ -68,17 +77,19 @@ export const Articles = () => {
     <ArticlesContainer>
       <Switch>
         <Route path="/article">
-          <ArticlePage article={articleView} />
+          <ArticlePage article={articleView} goBack={goBack} />
+        </Route>
+        <Route path="/">
+          {!articleViewLoading && !articleView && (
+            <>
+              <ArticlesTitle>Top News</ArticlesTitle>
+              {loading && (<LoadingText>Loading news ...</LoadingText>)}
+              {!loading && articles.length === 0 && <LoadingText>Nothing more to read.</LoadingText>}
+              {articles.length > 0 && articles.map((article, index) => <Article article={article} loadArticle={() => loadArticle(article)} key={index} />)}
+            </>
+          )}
         </Route>
       </Switch>
-      {!articleViewLoading && !articleView && (
-        <>
-          <ArticlesTitle>Top News</ArticlesTitle>
-          {loading && (<LoadingText>Loading news ...</LoadingText>)}
-          {!loading && articles.length === 0 && <LoadingText>Nothing more to read.</LoadingText>}
-          {articles.length > 0 && articles.map((article, index) => <Article article={article} loadArticle={() => loadArticle(article)} key={index} />)}
-        </>
-      )}
     </ArticlesContainer>
   );
 };
